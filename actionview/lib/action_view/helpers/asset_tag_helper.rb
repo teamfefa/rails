@@ -594,16 +594,27 @@ module ActionView
         def multiple_sources_tag_builder(type, sources)
           options       = sources.extract_options!.symbolize_keys
           skip_pipeline = options.delete(:skip_pipeline)
+          tracks        = options.delete(:tracks) || []
           sources.flatten!
 
           yield options if block_given?
 
-          if sources.size > 1
+          if sources.size == 1
+            options[:src] = resolve_asset_source(type, sources.pop, skip_pipeline)
+          end
+
+          if sources.size > 1 || tracks.size > 0
+            tags = sources.map { |source| tag("source", src: resolve_asset_source(type, source, skip_pipeline)) }
+
+            tags << tracks.map do |track_options|
+              track_options[:src] = resolve_asset_source(type, track_options[:src], skip_pipeline)
+              tag("track", track_options)
+            end
+
             content_tag(type, options) do
-              safe_join sources.map { |source| tag("source", src: resolve_asset_source(type, source, skip_pipeline)) }
+              safe_join(tags)
             end
           else
-            options[:src] = resolve_asset_source(type, sources.first, skip_pipeline)
             content_tag(type, nil, options)
           end
         end

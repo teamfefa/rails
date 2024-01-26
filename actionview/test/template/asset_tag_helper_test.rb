@@ -383,7 +383,10 @@ class AssetTagHelperTest < ActionView::TestCase
     %(video_tag("//media.rubyonrails.org/video/rails_blog_2.mov")) => %(<video src="//media.rubyonrails.org/video/rails_blog_2.mov"></video>),
     %(video_tag("multiple.ogg", "multiple.avi")) => %(<video><source src="/videos/multiple.ogg" /><source src="/videos/multiple.avi" /></video>),
     %(video_tag(["multiple.ogg", "multiple.avi"])) => %(<video><source src="/videos/multiple.ogg" /><source src="/videos/multiple.avi" /></video>),
-    %(video_tag(["multiple.ogg", "multiple.avi"], :size => "160x120", :controls => true)) => %(<video controls="controls" height="120" width="160"><source src="/videos/multiple.ogg" /><source src="/videos/multiple.avi" /></video>)
+    %(video_tag(["multiple.ogg", "multiple.avi"], :size => "160x120", :controls => true)) => %(<video controls="controls" height="120" width="160"><source src="/videos/multiple.ogg" /><source src="/videos/multiple.avi" /></video>),
+    %(video_tag("speech.mp4", :tracks => [{:src => "speech.vtt"}])) => %(<video src="/videos/speech.mp4"><track src="/videos/speech.vtt" /></video>),
+    %(video_tag("speech.mp4", :tracks => [{:default => true, :kind => :captions, :src => "speech.vtt", :srclang => "en"}])) => %(<video src="/videos/speech.mp4"><track default="default" kind="captions" src="/videos/speech.vtt" srclang="en" /></video>),
+    %(video_tag(["multiple.ogg", "multiple.avi"], :tracks => [{:src => "speech.vtt"}])) => %(<video><source src="/videos/multiple.ogg" /><source src="/videos/multiple.avi" /><track src="/videos/speech.vtt" /></video>)
   }
 
   AudioPathToTag = {
@@ -421,7 +424,10 @@ class AssetTagHelperTest < ActionView::TestCase
     %(audio_tag("//media.rubyonrails.org/audio/rails_blog_2.mov")) => %(<audio src="//media.rubyonrails.org/audio/rails_blog_2.mov"></audio>),
     %(audio_tag("audio.mp3", "audio.ogg")) => %(<audio><source src="/audios/audio.mp3" /><source src="/audios/audio.ogg" /></audio>),
     %(audio_tag(["audio.mp3", "audio.ogg"])) => %(<audio><source src="/audios/audio.mp3" /><source src="/audios/audio.ogg" /></audio>),
-    %(audio_tag(["audio.mp3", "audio.ogg"], :preload => 'none', :controls => true)) => %(<audio preload="none" controls="controls"><source src="/audios/audio.mp3" /><source src="/audios/audio.ogg" /></audio>)
+    %(audio_tag(["audio.mp3", "audio.ogg"], :preload => 'none', :controls => true)) => %(<audio preload="none" controls="controls"><source src="/audios/audio.mp3" /><source src="/audios/audio.ogg" /></audio>),
+    %(audio_tag("speech.mp3", :tracks => [{:src => "speech.vtt"}])) => %(<audio src="/audios/speech.mp3"><track src="/audios/speech.vtt" /></audio>),
+    %(audio_tag("speech.mp3", :tracks => [{:default => true, :kind => :captions, :src => "speech.vtt", :srclang => "en"}])) => %(<audio src="/audios/speech.mp3"><track default="default" kind="captions" src="/audios/speech.vtt" srclang="en" /></audio>),
+    %(audio_tag(["multiple.mp3", "multiple.ogg"], :tracks => [{:src => "speech.vtt"}])) => %(<audio><source src="/audios/multiple.mp3" /><source src="/audios/multiple.ogg" /><track src="/audios/speech.vtt" /></audio>)
   }
 
   FontPathToTag = {
